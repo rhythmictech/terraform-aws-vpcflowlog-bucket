@@ -12,12 +12,27 @@ Creates an S3 bucket suitable for receiving VPC flow logs from one or more AWS a
 Example:
 
 
+Create the bucket with this module.
 ```
 module "vpcflowlog-bucket" {
   source              = "rhythmictech/aws-vpcflowlogs/terraform"
   allowed_account_ids = ["123456789012", "123456789013"]
   logging_bucket      = "example-s3-access-logs-bucket"
   region              = "us-east-1"
+}
+```
+
+Then create the flow logs in each of the allowed accounts. Logs will flow back to the bucket in the original account.
+```
+module "vpcflowlogs" {
+  source = "git::https://github.com/rhythmictech/terraform-aws-vpcflowlogs.git"
+
+  create_bucket      = false
+  create_kms_key     = false
+  region             = var.region
+  vpc_ids            = [module.vpc.vpc_id]
+  vpcflowlog_bucket  = module.vpcflowlog-bucket.s3_bucket_name
+  vpcflowlog_kms_key = module.vpcflowlog-bucket.kms_key_id
 }
 ```
 
