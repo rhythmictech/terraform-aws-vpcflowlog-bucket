@@ -4,6 +4,41 @@ variable "allowed_account_ids" {
   type        = list(string)
 }
 
+variable "lifecycle_rules" {
+  description = "lifecycle rules to apply to the bucket"
+
+  default = [
+    {
+      id                            = "expire-noncurrent-objects-after-ninety-days"
+      noncurrent_version_expiration = 90
+    },
+    {
+      id = "transition-to-IA-after-30-days"
+      transition = [{
+        days          = 30
+        storage_class = "STANDARD_IA"
+      }]
+    },
+    {
+      id         = "delete-after-seven-years"
+      expiration = 2557
+    },
+  ]
+
+  type = list(object(
+    {
+      id                            = string
+      enabled                       = optional(bool, true)
+      expiration                    = optional(number)
+      prefix                        = optional(number)
+      noncurrent_version_expiration = optional(number)
+      transition = optional(list(object({
+        days          = number
+        storage_class = string
+      })))
+  }))
+}
+
 variable "logging_bucket" {
   description = "S3 bucket to send request logs to the VPC flow log bucket to"
   type        = string
