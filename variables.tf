@@ -30,13 +30,19 @@ variable "lifecycle_rules" {
       id                            = string
       enabled                       = optional(bool, true)
       expiration                    = optional(number)
-      prefix                        = optional(number)
+      prefix                        = optional(string)
       noncurrent_version_expiration = optional(number)
       transition = optional(list(object({
         days          = number
         storage_class = string
       })))
   }))
+}
+
+variable "lifecycle_transition_default_minimum_object_size" {
+  default     = "varies_by_storage_class"
+  description = "The default minimum object size behavior applied to the lifecycle configuration"
+  type        = string
 }
 
 variable "logging_bucket" {
