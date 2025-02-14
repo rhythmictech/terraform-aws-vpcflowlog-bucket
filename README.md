@@ -42,13 +42,13 @@ module "vpcflowlogs" {
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.4 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.17.1 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.87.0 |
 
 ## Modules
 
@@ -61,7 +61,6 @@ No modules.
 | [aws_kms_alias.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_alias) | resource |
 | [aws_kms_key.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key) | resource |
 | [aws_s3_bucket.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
-| [aws_s3_bucket_acl.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_acl) | resource |
 | [aws_s3_bucket_lifecycle_configuration.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_lifecycle_configuration) | resource |
 | [aws_s3_bucket_logging.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_logging) | resource |
 | [aws_s3_bucket_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
@@ -78,7 +77,8 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_allowed_account_ids"></a> [allowed\_account\_ids](#input\_allowed\_account\_ids) | Optional list of AWS Account IDs that are permitted to write to the bucket | `list(string)` | `[]` | no |
-| <a name="input_lifecycle_rules"></a> [lifecycle\_rules](#input\_lifecycle\_rules) | lifecycle rules to apply to the bucket | <pre>list(object(<br>    {<br>      id                            = string<br>      enabled                       = optional(bool, true)<br>      expiration                    = optional(number)<br>      prefix                        = optional(number)<br>      noncurrent_version_expiration = optional(number)<br>      transition = optional(list(object({<br>        days          = number<br>        storage_class = string<br>      })))<br>  }))</pre> | <pre>[<br>  {<br>    "id": "expire-noncurrent-objects-after-ninety-days",<br>    "noncurrent_version_expiration": 90<br>  },<br>  {<br>    "id": "transition-to-IA-after-30-days",<br>    "transition": [<br>      {<br>        "days": 30,<br>        "storage_class": "STANDARD_IA"<br>      }<br>    ]<br>  },<br>  {<br>    "expiration": 2557,<br>    "id": "delete-after-seven-years"<br>  }<br>]</pre> | no |
+| <a name="input_lifecycle_rules"></a> [lifecycle\_rules](#input\_lifecycle\_rules) | lifecycle rules to apply to the bucket | <pre>list(object(<br>    {<br>      id                            = string<br>      enabled                       = optional(bool, true)<br>      expiration                    = optional(number)<br>      prefix                        = optional(string)<br>      noncurrent_version_expiration = optional(number)<br>      transition = optional(list(object({<br>        days          = number<br>        storage_class = string<br>      })))<br>  }))</pre> | <pre>[<br>  {<br>    "id": "expire-noncurrent-objects-after-ninety-days",<br>    "noncurrent_version_expiration": 90<br>  },<br>  {<br>    "id": "transition-to-IA-after-30-days",<br>    "transition": [<br>      {<br>        "days": 30,<br>        "storage_class": "STANDARD_IA"<br>      }<br>    ]<br>  },<br>  {<br>    "expiration": 2557,<br>    "id": "delete-after-seven-years"<br>  }<br>]</pre> | no |
+| <a name="input_lifecycle_transition_default_minimum_object_size"></a> [lifecycle\_transition\_default\_minimum\_object\_size](#input\_lifecycle\_transition\_default\_minimum\_object\_size) | The default minimum object size behavior applied to the lifecycle configuration | `string` | `"varies_by_storage_class"` | no |
 | <a name="input_logging_bucket"></a> [logging\_bucket](#input\_logging\_bucket) | S3 bucket to send request logs to the VPC flow log bucket to | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | Region VPC flow logs will be sent to | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags to include on resources that support it | `map(string)` | `{}` | no |
